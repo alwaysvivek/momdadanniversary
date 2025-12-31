@@ -1,140 +1,86 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Heart, Sparkles } from 'lucide-react';
-import { useEffect, useState } from 'react';
-
-// Pre-generated random values outside component to make them stable
-const generateHeartPositions = () => {
-  return Array.from({ length: 20 }, (_, i) => ({
-    id: i,
-    initialX: Math.random() * 1000,
-    animateX: Math.random() * 1000,
-    duration: Math.random() * 10 + 15,
-    delay: Math.random() * 5,
-  }));
-};
-
-const heartPositions = generateHeartPositions();
+import { useMusicContext } from '../page';
 
 export default function HeroSection() {
-  const [mounted, setMounted] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(1000);
+  const { playMusic } = useMusicContext();
 
-  useEffect(() => {
-    // Use requestAnimationFrame to avoid cascading renders
-    requestAnimationFrame(() => {
-      setMounted(true);
-      setWindowWidth(window.innerWidth);
-    });
-    
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  if (!mounted) return null;
+  const handleStart = () => {
+    playMusic();
+    // Smooth scroll to next section
+    const nextSection = document.querySelector('section');
+    if (nextSection) {
+      nextSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-    >
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {heartPositions.map((heart) => (
+    <section className="relative min-h-screen flex items-center justify-center bg-white overflow-hidden">
+      {/* Minimal gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100" />
+      
+      <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {/* Minimal icon */}
           <motion.div
-            key={heart.id}
-            className="absolute text-pink-200 opacity-20"
-            initial={{
-              x: (heart.initialX / 1000) * windowWidth,
-              y: window.innerHeight + 100,
-            }}
-            animate={{
-              y: -100,
-              x: (heart.animateX / 1000) * windowWidth,
-            }}
-            transition={{
-              duration: heart.duration,
-              repeat: Infinity,
-              delay: heart.delay,
-            }}
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            className="mb-12"
           >
-            <Heart className="w-8 h-8" fill="currentColor" />
+            <div className="text-8xl mb-4">💕</div>
           </motion.div>
-        ))}
-      </div>
 
-      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.3, type: 'spring', stiffness: 200 }}
-          className="mb-8"
-        >
-          <Sparkles className="w-16 h-16 mx-auto text-yellow-300" fill="currentColor" />
+          {/* Title with Apple typography */}
+          <h1 className="text-6xl md:text-7xl lg:text-8xl font-semibold text-gray-900 mb-6 tracking-tight leading-none">
+            Happy 20th
+            <br />
+            Anniversary
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-xl md:text-2xl text-gray-600 mb-12 font-light">
+            Celebrating two decades of love
+          </p>
+
+          {/* Clean Apple-style button */}
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleStart}
+            className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-gray-900 rounded-full hover:bg-gray-800 transition-all duration-200 shadow-lg hover:shadow-xl"
+            aria-label="Start celebration and play music"
+          >
+            Start
+          </motion.button>
         </motion.div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 font-playfair"
-          style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}
-        >
-          Happy 20th Anniversary
-        </motion.h1>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="text-2xl md:text-4xl text-white/90 mb-4"
-        >
-          ✨ Celebrating Two Decades of Love ✨
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.9 }}
-          className="bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xl md:text-3xl py-4 px-8 rounded-full inline-block shadow-2xl"
-        >
-          🎊 Happy English New Year 2026! 🎊
-        </motion.div>
-
+        {/* Minimal scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          className="mt-12"
+          transition={{ delay: 1, duration: 1 }}
+          className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
         >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => {
-              document.getElementById('timeline')?.scrollIntoView({
-                behavior: 'smooth',
-              });
-            }}
-            className="bg-white text-purple-600 px-8 py-4 rounded-full text-lg font-semibold shadow-xl hover:shadow-2xl transition-shadow"
-            aria-label="Scroll to timeline section"
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            className="text-gray-400"
           >
-            Begin the Journey 💕
-          </motion.button>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
+          </motion.div>
         </motion.div>
       </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        animate={{ y: [0, 10, 0] }}
-        transition={{ repeat: Infinity, duration: 2 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-      >
-        <div className="text-white text-4xl">↓</div>
-      </motion.div>
-    </motion.section>
+    </section>
   );
 }

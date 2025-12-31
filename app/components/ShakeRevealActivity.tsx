@@ -19,7 +19,6 @@ export default function ShakeRevealActivity() {
   const SHAKE_SENSITIVITY = 12;
 
   useEffect(() => {
-    // Initialize window size after mount
     const updateSize = () => {
       setWindowSize({ width: window.innerWidth, height: window.innerHeight });
     };
@@ -33,7 +32,6 @@ export default function ShakeRevealActivity() {
   useEffect(() => {
     if (!isStarted || isRevealed) return;
 
-    // Set up drain interval
     drainInterval.current = setInterval(() => {
       setProgress((prev) => Math.max(0, prev - DRAIN));
     }, 50);
@@ -77,7 +75,6 @@ export default function ShakeRevealActivity() {
   };
 
   const startActivity = useCallback(async () => {
-    // Request permission for motion on iOS
     if (typeof DeviceMotionEvent !== 'undefined' && typeof (DeviceMotionEvent as unknown as { requestPermission?: () => Promise<string> }).requestPermission === 'function') {
       try {
         const permission = await ((DeviceMotionEvent as unknown as { requestPermission: () => Promise<string> }).requestPermission());
@@ -96,53 +93,49 @@ export default function ShakeRevealActivity() {
 
   useEffect(() => {
     if (progress >= TARGET && !isRevealed) {
-      // Use a state updater function to avoid cascading renders
       setTimeout(() => {
         setIsRevealed(true);
         if (drainInterval.current) clearInterval(drainInterval.current);
-        
-        // Clean up event listeners
         window.removeEventListener('devicemotion', handleMotion);
       }, 0);
     }
   }, [progress, isRevealed, TARGET, handleMotion]);
 
   const progressPercent = Math.min((progress / TARGET) * 100, 100);
-  const blurAmount = Math.max(0, 40 - (progressPercent / 100) * 40);
-  const brightness = 0.1 + (progressPercent / 100) * 0.9;
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 rounded-3xl shadow-2xl my-12 mx-4 md:mx-8 relative overflow-hidden">
+    <section className="py-20 px-4">
       {isRevealed && (
         <Confetti
           width={windowSize.width}
           height={windowSize.height}
           recycle={false}
           numberOfPieces={300}
-          colors={['#ffffff', '#ff69b4', '#ff0000', '#ffd700', '#00ffff']}
+          colors={['#000000', '#374151', '#6B7280', '#9CA3AF', '#D1D5DB']}
         />
       )}
 
-      <div className="max-w-4xl mx-auto text-center">
+      <div className="max-w-2xl mx-auto">
         {!isStarted ? (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="text-center"
           >
-            <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white font-playfair">
-              🎁 Mystery Surprise Box
+            <h2 className="text-4xl md:text-5xl font-semibold text-gray-900 mb-6 tracking-tight">
+              Shake to Reveal
             </h2>
-            <p className="text-lg md:text-xl text-white/80 mb-8">
-              Shake your phone or move your mouse to reveal a special message!
+            <p className="text-lg text-gray-600 mb-8 font-light">
+              Shake your phone or move your mouse to reveal a surprise
             </p>
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={startActivity}
-              className="bg-white text-purple-900 px-12 py-4 rounded-full text-xl font-bold shadow-2xl hover:shadow-white/20 transition-all"
+              className="px-8 py-4 text-lg font-medium text-white bg-gray-900 rounded-full hover:bg-gray-800 transition-all duration-200 shadow-lg"
             >
-              TAP TO START 🎉
+              Start
             </motion.button>
           </motion.div>
         ) : (
@@ -156,71 +149,50 @@ export default function ShakeRevealActivity() {
           >
             {!isRevealed && (
               <>
-                <motion.h3
-                  animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="text-2xl md:text-3xl font-bold mb-4 text-white uppercase tracking-wide"
-                >
-                  {progressPercent < 30 ? 'Keep Going! 💪' : progressPercent < 70 ? 'Almost There! 🔥' : 'So Close! ⚡'}
-                </motion.h3>
-                <div className="w-full max-w-md mx-auto mb-6">
-                  <div className="h-3 bg-white/20 rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full bg-gradient-to-r from-green-400 via-blue-400 to-purple-400"
-                      style={{ width: `${progressPercent}%` }}
-                      transition={{ duration: 0.2 }}
-                    />
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-medium text-gray-900 mb-2">
+                    {progressPercent < 30 ? 'Keep going' : progressPercent < 70 ? 'Almost there' : 'Nearly done'}
+                  </h3>
+                  <div className="w-full max-w-md mx-auto">
+                    <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+                      <motion.div
+                        className="h-full bg-gray-900"
+                        style={{ width: `${progressPercent}%` }}
+                        transition={{ duration: 0.2 }}
+                      />
+                    </div>
+                    <p className="text-gray-500 text-sm mt-2">{Math.round(progressPercent)}%</p>
                   </div>
-                  <p className="text-white/60 text-sm mt-2">{Math.round(progressPercent)}% revealed</p>
                 </div>
               </>
             )}
 
             <motion.div
-              className="relative mx-auto max-w-2xl"
-              animate={!isRevealed ? { rotate: [0, -2, 2, 0] } : { scale: [1, 1.05, 1] }}
+              className="relative mx-auto"
+              animate={!isRevealed ? { rotate: [0, -1, 1, 0] } : { scale: [1, 1.02, 1] }}
               transition={!isRevealed ? { duration: 0.3, repeat: Infinity } : { duration: 1.5 }}
             >
-              <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
-                <img
-                  src="/placeholder-celebration.jpg"
-                  alt="Mystery reveal"
-                  className="w-full h-full object-cover transition-all duration-300"
-                  style={{
-                    filter: `blur(${blurAmount}px) brightness(${brightness}) sepia(${1 - progressPercent / 100}) hue-rotate(${(1 - progressPercent / 100) * 180}deg)`,
-                  }}
-                  onError={(e) => {
-                    // Fallback if image doesn't exist
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.parentElement!.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-                  }}
-                />
-                
+              <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 shadow-sm border border-gray-200">
                 {!isRevealed && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-6xl md:text-8xl animate-pulse">
-                      🎁
-                    </div>
+                  <div className="absolute inset-0 flex items-center justify-center backdrop-blur-xl bg-white/80">
+                    <div className="text-7xl">🎁</div>
                   </div>
                 )}
 
                 {isRevealed && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8 }}
-                    className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-600/90 to-pink-600/90"
+                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                    className="absolute inset-0 flex items-center justify-center bg-white"
                   >
                     <div className="text-center p-8">
-                      <div className="text-6xl md:text-8xl mb-4">🎊</div>
-                      <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 font-playfair">
-                        Congratulations!
+                      <div className="text-7xl mb-6">🎊</div>
+                      <h2 className="text-4xl md:text-5xl font-semibold text-gray-900 mb-4 tracking-tight">
+                        20 Years
                       </h2>
-                      <p className="text-xl md:text-2xl text-white/90">
-                        20 Years of Beautiful Love! 💕
-                      </p>
-                      <p className="text-lg md:text-xl text-white/80 mt-4">
-                        & Happy New Year 2026! 🎆
+                      <p className="text-xl text-gray-600 font-light">
+                        Of beautiful love
                       </p>
                     </div>
                   </motion.div>
@@ -229,13 +201,9 @@ export default function ShakeRevealActivity() {
             </motion.div>
 
             {!isRevealed && (
-              <motion.p
-                animate={{ opacity: [0.4, 0.8, 0.4] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="text-white/60 text-sm md:text-base mt-6 uppercase tracking-wider"
-              >
-                📱 Shake it hard or move your mouse vigorously!
-              </motion.p>
+              <p className="text-gray-500 text-sm text-center mt-6">
+                Shake or tap to continue
+              </p>
             )}
           </motion.div>
         )}

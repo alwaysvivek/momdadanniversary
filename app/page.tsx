@@ -1,36 +1,50 @@
+'use client';
+
 import HeroSection from './components/HeroSection';
-import TimelineSection from './components/TimelineSection';
 import ShakeRevealActivity from './components/ShakeRevealActivity';
-import PhotoCarousel from './components/PhotoCarousel';
-import InteractiveHeartSection from './components/InteractiveHeartSection';
-import AnniversaryCounter from './components/AnniversaryCounter';
-import ReasonsWeLoveYou from './components/ReasonsWeLoveYou';
-import MusicPlayer from './components/MusicPlayer';
-import VirtualGreetingCard from './components/VirtualGreetingCard';
 import PhotoGallerySection from './components/PhotoGallerySection';
+import MusicPlayer from './components/MusicPlayer';
 import PersonalMessageSection from './components/PersonalMessageSection';
-import WishesSection from './components/WishesSection';
-import Footer from './components/Footer';
+import { createContext, useContext, useState, useRef } from 'react';
+
+// Create context for music player control
+export const MusicContext = createContext<{
+  audioRef: React.RefObject<HTMLAudioElement | null> | null;
+  playMusic: () => void;
+}>({
+  audioRef: null,
+  playMusic: () => {},
+});
+
+export const useMusicContext = () => useContext(MusicContext);
 
 export default function Home() {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  
+  const playMusic = () => {
+    if (audioRef.current) {
+      audioRef.current.play().catch(err => console.error('Audio play error:', err));
+    }
+  };
+
   return (
-    <main className="min-h-screen">
-      <HeroSection />
-      <div className="max-w-7xl mx-auto">
-        <TimelineSection />
-        <AnniversaryCounter />
-        <ShakeRevealActivity />
-        <PhotoCarousel />
-        <InteractiveHeartSection />
-        <ReasonsWeLoveYou />
-        <MusicPlayer />
-        <VirtualGreetingCard />
-        <PhotoGallerySection />
-        <PersonalMessageSection />
-        <WishesSection />
-        <Footer />
-      </div>
-    </main>
+    <MusicContext.Provider value={{ audioRef, playMusic }}>
+      <main className="min-h-screen bg-white">
+        <HeroSection />
+        <div className="max-w-5xl mx-auto px-4">
+          <ShakeRevealActivity />
+          <PhotoGallerySection />
+          <MusicPlayer audioRef={audioRef} />
+          <PersonalMessageSection />
+        </div>
+        
+        {/* Footer */}
+        <footer className="py-12 text-center text-gray-500 text-sm">
+          <p>Made with ❤️ for Mom & Dad&apos;s 20th Anniversary</p>
+          <p className="mt-2">January 1, 2026</p>
+        </footer>
+      </main>
+    </MusicContext.Provider>
   );
 }
 
