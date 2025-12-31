@@ -8,48 +8,42 @@ const photos = [
   {
     id: 1,
     emoji: '💕',
-    title: 'First Meeting',
-    subtitle: 'Where it all began',
+    title: 'Photo 1',
     gradient: 'from-pink-500 via-rose-500 to-red-500',
     placeholder: '/photos/photo1.jpg',
   },
   {
     id: 2,
     emoji: '💑',
-    title: 'Wedding Day',
-    subtitle: '2006 - The perfect union',
+    title: 'Photo 2',
     gradient: 'from-purple-500 via-pink-500 to-rose-500',
     placeholder: '/photos/photo2.jpg',
   },
   {
     id: 3,
     emoji: '🏡',
-    title: 'Building a Home',
-    subtitle: 'Creating memories together',
+    title: 'Photo 3',
     gradient: 'from-blue-500 via-indigo-500 to-purple-500',
     placeholder: '/photos/photo3.jpg',
   },
   {
     id: 4,
     emoji: '👨‍👩‍👧',
-    title: 'Growing Family',
-    subtitle: 'The joy of parenthood',
+    title: 'Photo 4',
     gradient: 'from-green-500 via-teal-500 to-cyan-500',
     placeholder: '/photos/photo4.jpg',
   },
   {
     id: 5,
     emoji: '🎉',
-    title: 'Celebrations',
-    subtitle: 'Milestones and moments',
+    title: 'Photo 5',
     gradient: 'from-yellow-500 via-orange-500 to-red-500',
     placeholder: '/photos/photo5.jpg',
   },
   {
     id: 6,
     emoji: '🌟',
-    title: 'Today & Tomorrow',
-    subtitle: '20 years and counting',
+    title: 'Photo 6',
     gradient: 'from-indigo-500 via-purple-500 to-pink-500',
     placeholder: '/photos/photo6.jpg',
   },
@@ -108,10 +102,10 @@ export default function PhotoCarousel() {
         <div className="text-center mb-12">
           <Camera className="w-12 h-12 mx-auto mb-4 text-purple-600" />
           <h2 className="text-4xl md:text-6xl font-bold mb-4 text-purple-900 font-playfair">
-            📸 Memory Lane
+            📸 Photo Memories
           </h2>
           <p className="text-lg md:text-xl text-gray-600">
-            Swipe or click to explore 20 years of love
+            Swipe or click to view your beautiful moments
           </p>
         </div>
 
@@ -175,7 +169,7 @@ export default function PhotoCarousel() {
                 />
 
                 {/* Content overlay */}
-                <div className="relative z-10 text-center text-white p-8">
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8">
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
@@ -188,18 +182,10 @@ export default function PhotoCarousel() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
-                    className="text-4xl md:text-6xl font-bold mb-4 font-playfair drop-shadow-lg"
+                    className="text-3xl md:text-5xl font-bold font-playfair drop-shadow-lg"
                   >
                     {currentPhoto.title}
                   </motion.h3>
-                  <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                    className="text-xl md:text-2xl font-light drop-shadow-md"
-                  >
-                    {currentPhoto.subtitle}
-                  </motion.p>
                 </div>
 
                 {/* Swipe hint overlay for mobile */}
