@@ -10,6 +10,7 @@ export default function ShakeRevealActivity() {
   const [isRevealed, setIsRevealed] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
   const [windowSize, setWindowSize] = useState({ width: 800, height: 600 });
+  const [shakeRotation, setShakeRotation] = useState(0);
   const lastX = useRef(0);
   const lastY = useRef(0);
   const lastZ = useRef(0);
@@ -54,6 +55,7 @@ export default function ShakeRevealActivity() {
 
     if (delta > SHAKE_SENSITIVITY) {
       setProgress((prev) => Math.min(TARGET, prev + delta * 0.8));
+      setShakeRotation((Math.random() - 0.5) * 2);
       if (navigator.vibrate) navigator.vibrate(20);
     }
 
@@ -67,12 +69,14 @@ export default function ShakeRevealActivity() {
     const movement = Math.abs(e.movementX) + Math.abs(e.movementY);
     if (movement > 10) {
       setProgress((prev) => Math.min(TARGET, prev + movement * 0.15));
+      setShakeRotation((Math.random() - 0.5) * 2);
     }
   };
 
   const handleTap = () => {
     if (isRevealed || !isStarted) return;
     setProgress((prev) => Math.min(TARGET, prev + 5));
+    setShakeRotation((Math.random() - 0.5) * 2);
   };
 
   const startActivity = useCallback(async () => {
@@ -154,7 +158,7 @@ export default function ShakeRevealActivity() {
             onTouchStart={handleTap}
             className="relative w-[95vw] h-[75vh] flex items-center justify-center cursor-pointer touch-none"
             style={{
-              transform: !isRevealed ? `rotate(${(Math.random() - 0.5) * 2}deg) scale(1.01)` : 'scale(1.05)',
+              transform: !isRevealed ? `rotate(${shakeRotation}deg) scale(1.01)` : 'scale(1.05)',
               transition: 'transform 0.1s ease-out'
             }}
           >
