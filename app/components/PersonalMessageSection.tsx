@@ -45,7 +45,7 @@ export default function PersonalMessageSection() {
         >
           <div className="prose prose-lg md:prose-xl max-w-none">
             <p className="text-gray-700 leading-relaxed text-center md:text-left mb-6">
-              <strong className="text-purple-700">Dear Uncle & Aunty,</strong>
+              <strong className="text-purple-700">Dear Uncle &amp; Aunty,</strong>
             </p>
 
             <p className="text-gray-700 leading-relaxed mb-6">
@@ -54,7 +54,7 @@ export default function PersonalMessageSection() {
 
             <p className="text-gray-700 leading-relaxed mb-6">
               Your love story is truly inspiring. The way you support each other, laugh together, 
-              and navigate life's journey hand-in-hand shows what a beautiful partnership looks like. 
+              and navigate life&apos;s journey hand-in-hand shows what a beautiful partnership looks like. 
               Your home has always been filled with warmth, love, and happiness.
             </p>
 
@@ -78,7 +78,7 @@ export default function PersonalMessageSection() {
               </p>
               <p className="text-gray-700 leading-relaxed mt-4">
                 She is the most wonderful person in my life, and that is a testament to the love, 
-                values, and care you've given her. Your guidance has shaped her into the amazing 
+                values, and care you&apos;ve given her. Your guidance has shaped her into the amazing 
                 person she is, and I feel incredibly blessed to have her in my life.
               </p>
             </motion.div>
@@ -89,7 +89,7 @@ export default function PersonalMessageSection() {
             </p>
 
             <p className="text-gray-700 leading-relaxed mb-8">
-              Here's to your beautiful journey together – past, present, and future! 🥂
+              Here&apos;s to your beautiful journey together – past, present, and future! 🥂
             </p>
 
             <div className="text-center mt-12">

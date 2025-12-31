@@ -4,11 +4,33 @@ import { motion } from 'framer-motion';
 import { Heart, Sparkles } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+// Pre-generated random values outside component to make them stable
+const generateHeartPositions = () => {
+  return Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    initialX: Math.random() * 1000,
+    animateX: Math.random() * 1000,
+    duration: Math.random() * 10 + 15,
+    delay: Math.random() * 5,
+  }));
+};
+
+const heartPositions = generateHeartPositions();
+
 export default function HeroSection() {
   const [mounted, setMounted] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(1000);
 
   useEffect(() => {
-    setMounted(true);
+    // Use requestAnimationFrame to avoid cascading renders
+    requestAnimationFrame(() => {
+      setMounted(true);
+      setWindowWidth(window.innerWidth);
+    });
+    
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   if (!mounted) return null;
@@ -22,22 +44,22 @@ export default function HeroSection() {
     >
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {heartPositions.map((heart) => (
           <motion.div
-            key={i}
+            key={heart.id}
             className="absolute text-pink-200 opacity-20"
             initial={{
-              x: Math.random() * window.innerWidth,
+              x: (heart.initialX / 1000) * windowWidth,
               y: window.innerHeight + 100,
             }}
             animate={{
               y: -100,
-              x: Math.random() * window.innerWidth,
+              x: (heart.animateX / 1000) * windowWidth,
             }}
             transition={{
-              duration: Math.random() * 10 + 15,
+              duration: heart.duration,
               repeat: Infinity,
-              delay: Math.random() * 5,
+              delay: heart.delay,
             }}
           >
             <Heart className="w-8 h-8" fill="currentColor" />

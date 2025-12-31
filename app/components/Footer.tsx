@@ -25,7 +25,7 @@ export default function Footer() {
       </motion.div>
       
       <p className="text-lg md:text-xl text-gray-700 mb-2">
-        Made with ❤️ for Mom & Dad's 20th Anniversary
+        Made with ❤️ for Mom &amp; Dad&apos;s 20th Anniversary
       </p>
       <p className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 font-playfair">
         January 1, 2026

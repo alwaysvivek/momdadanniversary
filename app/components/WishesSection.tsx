@@ -88,7 +88,7 @@ export default function WishesSection() {
               May your love story continue to inspire
             </p>
             <p className="text-lg md:text-xl opacity-90">
-              Here's to many more beautiful years together! 🥂✨
+              Here&apos;s to many more beautiful years together! 🥂✨
             </p>
           </div>
         </motion.div>
