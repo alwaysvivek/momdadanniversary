@@ -45,7 +45,7 @@ export default function HeroSection() {
 
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-gray-600 mb-12 font-light">
-            Celebrating two decades of love
+            I personally thank you more because I got Rishu jaisi itni pyari partner yay.
           </p>
 
           {/* Clean Apple-style button */}
