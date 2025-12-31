@@ -4,16 +4,29 @@ A beautiful, interactive web application celebrating 20 years of love and togeth
 
 ## 🎉 Features
 
-- **Beautiful Hero Section** with animated floating hearts
-- **Interactive Timeline** showcasing 20 years of memories
-- **Tap-to-Celebrate Heart** with confetti effects (mobile & desktop friendly)
-- **Photo Gallery** with customizable placeholders
-- **Personal Message** with heartfelt wishes and gratitude
-- **Wishes Section** with beautiful animations
+### Interactive Activities
+- **Mystery Surprise Box** - Shake your phone or move your mouse to reveal a special message (inspired by rishubaby)
+- **Photo Carousel** - Swipe-enabled photo gallery with smooth transitions
+- **Interactive Heart** - Tap/click 20 times to trigger a special confetti celebration
+- **Music Player** - Beautiful player with vinyl record animation for anniversary song
+- **Virtual Greeting Card** - Interactive envelope that opens to reveal a heartfelt message
+
+### Appreciation Sections
+- **Anniversary Counter** - Real-time display of years, days, and time together
+- **Reasons We Love You** - Interactive flip cards showing 6 reasons they're special
+- **Timeline** - Beautiful visual journey through 20 years of marriage
+- **Personal Message** - Heartfelt note from boyfriend perspective thanking for Rishu
+- **Wishes Section** - Beautiful animated wishes for the future
+- **Photo Gallery** - Grid of photo placeholders with hover effects
+
+### Design & UX
+- **Hero Section** with animated floating hearts
 - **Fully Responsive** - works perfectly on mobile, tablet, and desktop
 - **Touch & Click Support** - optimized for both touch and mouse interactions
 - **Smooth Animations** using Framer Motion
+- **Sequential Flow** - Activities naturally lead from one to another
 - **Accessible** with ARIA labels and semantic HTML
+- **New Year 2026 Theme** - Celebration elements throughout
 
 ## 🚀 Tech Stack
 
@@ -48,13 +61,27 @@ npm start
 
 ### Adding Photos
 
-Replace the photo placeholders by:
-1. Adding your images to the `public` folder
-2. Update the `PhotoGallerySection` component to use your images
+**For the Photo Carousel:**
+1. Add your images to `public/photos/` directory
+2. Name them `photo1.jpg`, `photo2.jpg`, `photo3.jpg`, `photo4.jpg`, `photo5.jpg`, `photo6.jpg`
+3. Recommended size: 1920x1280 pixels (4:3 ratio)
+
+**For the Photo Gallery:**
+1. Replace placeholders in the `PhotoGallerySection` component
+2. Add images to the `public` folder
+
+### Adding Your Anniversary Song
+
+1. Place your song file at `public/anniversary-song.mp3`
+2. Supported formats: MP3, WAV, OGG
+3. Keep file size under 10MB for best performance
 
 ### Editing Messages
 
-Update the personal message in `app/components/PersonalMessageSection.tsx`
+- Update the personal message in `app/components/PersonalMessageSection.tsx`
+- Customize timeline events in `app/components/TimelineSection.tsx`
+- Modify greeting card content in `app/components/VirtualGreetingCard.tsx`
+- Edit appreciation reasons in `app/components/ReasonsWeLoveYou.tsx`
 
 ### Changing Colors
 
@@ -97,12 +124,35 @@ The application is built with mobile users in mind:
 
 ## 🎊 Special Features
 
-1. **Interactive Heart** - Tap/click 20 times to trigger a special confetti celebration
-2. **Floating Hearts** - Ambient heart animations throughout the experience
-3. **Timeline** - Beautiful visual journey through 20 years of marriage
-4. **Personal Message** - Heartfelt note from boyfriend perspective thanking for Rishu
-5. **Smooth Animations** - Framer Motion powered page transitions
-6. **New Year Wishes** - Special greeting for English New Year 2026
+### Interactive Activities (Sequential Flow)
+1. **Hero Section** - Start with animated hearts and New Year wishes
+2. **Timeline** - Journey through 20 years of love
+3. **Anniversary Counter** - See real-time days together
+4. **Mystery Box** - Shake/move to reveal surprise message
+5. **Photo Carousel** - Swipe through memory lane (6 photos)
+6. **Interactive Heart** - Tap 20 times for confetti celebration
+7. **Reasons We Love You** - 6 flip cards with appreciation messages
+8. **Music Player** - Listen to your special anniversary song
+9. **Virtual Greeting Card** - Open envelope for heartfelt message
+10. **Photo Gallery** - Grid view of more memories
+11. **Personal Message** - Deep gratitude and love letter
+12. **Wishes** - Beautiful wishes for the future
+
+### Mobile-First & Touch-Optimized
+- Shake-to-reveal works on mobile devices (with device motion permission)
+- Swipe gestures for photo carousel
+- Touch-optimized buttons and interactions
+- Responsive layouts that adapt to any screen size
+- Prevents accidental zooming
+- Large, easy-to-tap elements
+
+### Celebration Elements
+- Confetti animations on special interactions
+- Floating hearts throughout
+- Smooth page transitions
+- Animated counters and timers
+- Interactive flip cards
+- Vinyl record spinning animation
 
 ## 🛠️ Development Commands
 
