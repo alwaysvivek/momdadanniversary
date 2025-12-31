@@ -3,20 +3,22 @@
 import { motion } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Confetti from 'react-confetti';
+import Image from 'next/image';
 
 export default function ShakeRevealActivity() {
   const [progress, setProgress] = useState(0);
   const [isRevealed, setIsRevealed] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
   const [windowSize, setWindowSize] = useState({ width: 800, height: 600 });
+  const [shakeRotation, setShakeRotation] = useState(0);
   const lastX = useRef(0);
   const lastY = useRef(0);
   const lastZ = useRef(0);
   const drainInterval = useRef<NodeJS.Timeout | null>(null);
 
-  const TARGET = 200;
-  const DRAIN = 0.5;
-  const SHAKE_SENSITIVITY = 12;
+  const TARGET = 250;
+  const DRAIN = 0.8;
+  const SHAKE_SENSITIVITY = 15;
 
   useEffect(() => {
     const updateSize = () => {
@@ -53,6 +55,7 @@ export default function ShakeRevealActivity() {
 
     if (delta > SHAKE_SENSITIVITY) {
       setProgress((prev) => Math.min(TARGET, prev + delta * 0.8));
+      setShakeRotation((Math.random() - 0.5) * 2);
       if (navigator.vibrate) navigator.vibrate(20);
     }
 
@@ -66,12 +69,14 @@ export default function ShakeRevealActivity() {
     const movement = Math.abs(e.movementX) + Math.abs(e.movementY);
     if (movement > 10) {
       setProgress((prev) => Math.min(TARGET, prev + movement * 0.15));
+      setShakeRotation((Math.random() - 0.5) * 2);
     }
   };
 
   const handleTap = () => {
     if (isRevealed || !isStarted) return;
     setProgress((prev) => Math.min(TARGET, prev + 5));
+    setShakeRotation((Math.random() - 0.5) * 2);
   };
 
   const startActivity = useCallback(async () => {
@@ -102,26 +107,20 @@ export default function ShakeRevealActivity() {
   }, [progress, isRevealed, TARGET, handleMotion]);
 
   const progressPercent = Math.min((progress / TARGET) * 100, 100);
+  const blurVal = (1 - progressPercent / 100) * 50;
+  const brightVal = 0.05 + (progressPercent / 100) * 0.95;
+  const sepiaVal = 1 - (progressPercent / 100);
+  const hueVal = (1 - progressPercent / 100) * 180;
 
   return (
-    <section className="py-20 px-4">
-      {isRevealed && (
-        <Confetti
-          width={windowSize.width}
-          height={windowSize.height}
-          recycle={false}
-          numberOfPieces={300}
-          colors={['#000000', '#374151', '#6B7280', '#9CA3AF', '#D1D5DB']}
-        />
-      )}
-
-      <div className="max-w-2xl mx-auto">
-        {!isStarted ? (
+    <>
+      {!isStarted ? (
+        <section className="py-20 px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="text-center"
+            className="text-center max-w-2xl mx-auto"
           >
             <h2 className="text-4xl md:text-5xl font-semibold text-gray-900 mb-6 tracking-tight">
               Shake to Reveal
@@ -133,81 +132,113 @@ export default function ShakeRevealActivity() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={startActivity}
-              className="px-8 py-4 text-lg font-medium text-white bg-gray-900 rounded-full hover:bg-gray-800 transition-all duration-200 shadow-lg"
+              className="px-8 py-4 text-lg font-medium text-white bg-gray-900 rounded-full hover:bg-gray-800 transition-all duration-200 shadow-lg uppercase tracking-[2px]"
             >
-              Start
+              Tap to Unbox
             </motion.button>
           </motion.div>
-        ) : (
+        </section>
+      ) : (
+        <div className="fixed inset-0 bg-black flex flex-col items-center justify-center z-50 overflow-hidden">
+          {isRevealed && (
+            <Confetti
+              width={windowSize.width}
+              height={windowSize.height}
+              recycle={false}
+              numberOfPieces={180}
+              colors={['#ffffff', '#ff69b4', '#ff0000', '#ffd700']}
+            />
+          )}
+
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             onMouseMove={handleMouseMove}
             onClick={handleTap}
             onTouchStart={handleTap}
-            className="cursor-pointer select-none"
+            className="relative w-[95vw] h-[75vh] flex items-center justify-center cursor-pointer touch-none"
+            style={{
+              transform: !isRevealed ? `rotate(${shakeRotation}deg) scale(1.01)` : 'scale(1.05)',
+              transition: 'transform 0.1s ease-out'
+            }}
           >
             {!isRevealed && (
-              <>
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl font-medium text-gray-900 mb-2">
-                    {progressPercent < 30 ? 'Keep going' : progressPercent < 70 ? 'Almost there' : 'Nearly done'}
-                  </h3>
-                  <div className="w-full max-w-md mx-auto">
-                    <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
-                      <motion.div
-                        className="h-full bg-gray-900"
-                        style={{ width: `${progressPercent}%` }}
-                        transition={{ duration: 0.2 }}
-                      />
-                    </div>
-                    <p className="text-gray-500 text-sm mt-2">{Math.round(progressPercent)}%</p>
-                  </div>
+              <div className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
+                <div className="text-white text-[0.7rem] tracking-[4px] uppercase mb-5">
+                  Developing
                 </div>
-              </>
+                <div className="w-[120px] h-[2px] bg-white/10">
+                  <motion.div
+                    className="h-full bg-white"
+                    style={{ width: `${progressPercent}%` }}
+                    transition={{ duration: 0.2 }}
+                  />
+                </div>
+              </div>
             )}
 
             <motion.div
-              className="relative mx-auto"
-              animate={!isRevealed ? { rotate: [0, -1, 1, 0] } : { scale: [1, 1.02, 1] }}
-              transition={!isRevealed ? { duration: 0.3, repeat: Infinity } : { duration: 1.5 }}
+              className="relative w-full h-full flex items-center justify-center gap-4 px-4"
+              animate={isRevealed ? { scale: [1, 1.05, 1] } : {}}
+              transition={isRevealed ? { duration: 2, ease: [0.175, 0.885, 0.32, 1.275] } : {}}
             >
-              <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 shadow-sm border border-gray-200">
-                {!isRevealed && (
-                  <div className="absolute inset-0 flex items-center justify-center backdrop-blur-xl bg-white/80">
-                    <div className="text-7xl">🎁</div>
-                  </div>
-                )}
+              {/* First Image Placeholder */}
+              <div className="relative w-[45%] h-[90%] flex items-center justify-center">
+                <Image
+                  src="/photos/photo1.jpg"
+                  alt="Anniversary Memory 1"
+                  fill
+                  className="object-contain"
+                  style={{
+                    filter: isRevealed 
+                      ? 'none' 
+                      : `blur(${blurVal}px) brightness(${brightVal}) sepia(${sepiaVal}) hue-rotate(${hueVal}deg)`
+                  }}
+                  priority
+                />
+              </div>
 
-                {isRevealed && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                    className="absolute inset-0 flex items-center justify-center bg-white"
-                  >
-                    <div className="text-center p-8">
-                      <div className="text-7xl mb-6">🎊</div>
-                      <h2 className="text-4xl md:text-5xl font-semibold text-gray-900 mb-4 tracking-tight">
-                        20 Years
-                      </h2>
-                      <p className="text-xl text-gray-600 font-light">
-                        Of beautiful love
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
+              {/* Second Image Placeholder */}
+              <div className="relative w-[45%] h-[90%] flex items-center justify-center">
+                <Image
+                  src="/photos/photo2.jpg"
+                  alt="Anniversary Memory 2"
+                  fill
+                  className="object-contain"
+                  style={{
+                    filter: isRevealed 
+                      ? 'none' 
+                      : `blur(${blurVal}px) brightness(${brightVal}) sepia(${sepiaVal}) hue-rotate(${hueVal}deg)`
+                  }}
+                  priority
+                />
               </div>
             </motion.div>
-
-            {!isRevealed && (
-              <p className="text-gray-500 text-sm text-center mt-6">
-                Shake or tap to continue
-              </p>
-            )}
           </motion.div>
-        )}
-      </div>
-    </section>
+
+          {!isRevealed && (
+            <div className="absolute bottom-10 text-white/40 text-[0.65rem] tracking-[2px] uppercase">
+              Shake it hard
+            </div>
+          )}
+
+          {isRevealed && (
+            <motion.button
+              initial={{ opacity: 0, display: 'none' }}
+              animate={{ opacity: 1, display: 'block' }}
+              transition={{ delay: 5 }}
+              onClick={() => {
+                setIsStarted(false);
+                setIsRevealed(false);
+                setProgress(0);
+              }}
+              className="absolute bottom-8 px-8 py-4 text-sm font-bold text-black bg-white rounded-full uppercase tracking-[2px] shadow-lg"
+            >
+              Replay
+            </motion.button>
+          )}
+        </div>
+      )}
+    </>
   );
 }
